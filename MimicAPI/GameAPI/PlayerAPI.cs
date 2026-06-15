@@ -84,7 +84,7 @@ namespace MimicAPI.GameAPI
                 return new List<InventoryItem>();
 
             object? inventory = GetInventory(actor);
-            return inventory != null ? ReflectionHelper.GetFieldValue<List<InventoryItem>>(inventory, "SlotItems") ?? new List<InventoryItem>() : new List<InventoryItem>();
+            return inventory != null ? ReflectionHelper.GetPropertyValue<List<InventoryItem>>(inventory, "SlotItems") ?? new List<InventoryItem>() : new List<InventoryItem>();
         }
 
         public static Vector3 GetPlayerPosition(ProtoActor? actor)
@@ -112,6 +112,10 @@ namespace MimicAPI.GameAPI
             var statManager = GetStatManager(actor);
             if (statManager == null)
                 return false;
+            // KNOWN PRE-EXISTING ISSUE (not caused by the 2026-06-15 update): IsAliveStatus is defined on the
+            // server-side VCreature/VActor (and on StatManager._self), not on StatManager itself, so this lookup
+            // returns null and IsPlayerAlive currently always reports false. A correct fix needs client/server
+            // design judgment (e.g. derive liveness from StatManager.GetCurrentHP()); left as-is to avoid guessing.
             var isAlive = ReflectionHelper.InvokeMethod(statManager, "IsAliveStatus");
             return isAlive is bool result && result;
         }

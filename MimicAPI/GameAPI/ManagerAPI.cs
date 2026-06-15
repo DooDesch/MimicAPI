@@ -19,7 +19,7 @@ namespace MimicAPI.GameAPI
 
         public static TimeUtil? GetTimeUtil() => GetManager<TimeUtil>("<timeutil>k__BackingField");
 
-        public static NavManager? GetNavManager() => GetManager<NavManager>("<navman>k__BackingField");
+        public static PathFindManager? GetNavManager() => GetManager<PathFindManager>("<navman>k__BackingField");
 
         public static DynamicDataManager? GetDynamicDataManager() => GetManager<DynamicDataManager>("<dynamicDataMan>k__BackingField");
 

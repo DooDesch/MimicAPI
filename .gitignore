@@ -11,6 +11,9 @@
 *.sln.docstates
 *.env
 
+# Local, machine-specific build overrides (e.g. GamePath); see Directory.Build.props
+Directory.Build.user.props
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
