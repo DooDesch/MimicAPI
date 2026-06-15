@@ -1,17 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+    <!--
+        MimicAPI build configuration.
+
+        Reference assemblies are resolved from a local MIMESIS install. Point the
+        build at your install in ONE of these ways (highest precedence first):
+
+          1. Command line:  -p:GamePath="D:\Steam\steamapps\common\MIMESIS"
+          2. Environment:   MIMESIS_PATH=<game install root>
+          3. Directory.Build.user.props (gitignored) next to this file, e.g.:
+                 <Project><PropertyGroup>
+                   <GamePath>D:\Steam\steamapps\common\MIMESIS</GamePath>
+                 </PropertyGroup></Project>
+          4. Auto-detection of a Steam install in the common locations below.
+
+        You can also override GameAssemblyPath / MelonLoaderPath / PluginsPath
+        directly instead of GamePath if your layout is non-standard.
+    -->
+    <Import Project="$(MSBuildThisFileDirectory)Directory.Build.user.props"
+            Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.user.props')" />
+
     <PropertyGroup>
-        <!-- Reference paths. Default to the canonical workspace reference DLL set
-             (Workspace/lib/game + Workspace/lib/melonloader) used by every other mod
-             in this repo. Can be overridden on the command line via
-             -p:GameAssemblyPath=... / -p:MelonLoaderPath=... -->
-        <WorkspaceRoot Condition="'$(WorkspaceRoot)' == ''">$(MSBuildThisFileDirectory)..\..</WorkspaceRoot>
-        <GameAssemblyPath Condition="'$(GameAssemblyPath)' == ''">$(WorkspaceRoot)\lib\game</GameAssemblyPath>
-        <MelonLoaderPath Condition="'$(MelonLoaderPath)' == ''">$(WorkspaceRoot)\lib\melonloader</MelonLoaderPath>
-        <!-- Real game Mods folder for the optional post-build copy. The copy target
-             only fires when this directory actually exists. -->
-        <PluginsPath Condition="'$(PluginsPath)' == ''">F:\Launcher\SteamLibrary\steamapps\common\MIMESIS\Mods</PluginsPath>
+        <!-- 2) Environment variable override. -->
+        <GamePath Condition="'$(GamePath)' == '' And '$(MIMESIS_PATH)' != ''">$(MIMESIS_PATH)</GamePath>
+
+        <!-- 4) Auto-detect: first candidate that actually contains the game wins.
+                Each is guarded on the Managed folder so empty/placeholder dirs are skipped. -->
+        <GamePath Condition="'$(GamePath)' == '' And Exists('$(registry:HKEY_CURRENT_USER\SOFTWARE\Valve\Steam@SteamPath)\steamapps\common\MIMESIS\MIMESIS_Data\Managed')">$(registry:HKEY_CURRENT_USER\SOFTWARE\Valve\Steam@SteamPath)\steamapps\common\MIMESIS</GamePath>
+        <GamePath Condition="'$(GamePath)' == '' And Exists('C:\Program Files (x86)\Steam\steamapps\common\MIMESIS\MIMESIS_Data\Managed')">C:\Program Files (x86)\Steam\steamapps\common\MIMESIS</GamePath>
+        <GamePath Condition="'$(GamePath)' == '' And Exists('C:\Program Files\Steam\steamapps\common\MIMESIS\MIMESIS_Data\Managed')">C:\Program Files\Steam\steamapps\common\MIMESIS</GamePath>
+        <GamePath Condition="'$(GamePath)' == '' And Exists('D:\SteamLibrary\steamapps\common\MIMESIS\MIMESIS_Data\Managed')">D:\SteamLibrary\steamapps\common\MIMESIS</GamePath>
+        <GamePath Condition="'$(GamePath)' == '' And Exists('E:\SteamLibrary\steamapps\common\MIMESIS\MIMESIS_Data\Managed')">E:\SteamLibrary\steamapps\common\MIMESIS</GamePath>
+
+        <!-- Last-resort default so the property is non-empty and any missing-reference
+             errors name a concrete (if absent) path instead of an empty string. -->
+        <GamePath Condition="'$(GamePath)' == ''">C:\Program Files (x86)\Steam\steamapps\common\MIMESIS</GamePath>
+
+        <!-- Derived paths. Each is independently overridable (see header). -->
+        <GameAssemblyPath Condition="'$(GameAssemblyPath)' == ''">$(GamePath)\MIMESIS_Data\Managed</GameAssemblyPath>
+        <MelonLoaderPath Condition="'$(MelonLoaderPath)' == ''">$(GamePath)\MelonLoader\net35</MelonLoaderPath>
+        <PluginsPath Condition="'$(PluginsPath)' == ''">$(GamePath)\Mods</PluginsPath>
     </PropertyGroup>
+
     <PropertyGroup>
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
