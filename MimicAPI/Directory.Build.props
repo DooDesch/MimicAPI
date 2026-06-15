@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <PropertyGroup>
-        <!-- Game paths -->
-        <GamePath>C:\Program Files (x86)\Steam\steamapps\common\MIMESIS</GamePath>
-        <GameAssemblyPath>$(GamePath)\Mimesis_Data\Managed</GameAssemblyPath>
-        <MelonLoaderPath>$(GamePath)\MelonLoader\net6</MelonLoaderPath>
-        <PluginsPath>$(GamePath)\Mods</PluginsPath>
+        <!-- Reference paths. Default to the canonical workspace reference DLL set
+             (Workspace/lib/game + Workspace/lib/melonloader) used by every other mod
+             in this repo. Can be overridden on the command line via
+             -p:GameAssemblyPath=... / -p:MelonLoaderPath=... -->
+        <WorkspaceRoot Condition="'$(WorkspaceRoot)' == ''">$(MSBuildThisFileDirectory)..\..</WorkspaceRoot>
+        <GameAssemblyPath Condition="'$(GameAssemblyPath)' == ''">$(WorkspaceRoot)\lib\game</GameAssemblyPath>
+        <MelonLoaderPath Condition="'$(MelonLoaderPath)' == ''">$(WorkspaceRoot)\lib\melonloader</MelonLoaderPath>
+        <!-- Real game Mods folder for the optional post-build copy. The copy target
+             only fires when this directory actually exists. -->
+        <PluginsPath Condition="'$(PluginsPath)' == ''">F:\Launcher\SteamLibrary\steamapps\common\MIMESIS\Mods</PluginsPath>
     </PropertyGroup>
     <PropertyGroup>
         <DebugType>pdbonly</DebugType>

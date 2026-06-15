@@ -78,9 +78,9 @@ namespace MimicAPI.GameAPI
 
         public static bool IsRoomPlayable(object? room) => room != null && ReflectionHelper.InvokeMethod(room, "IsPlayable") is bool b && b;
 
-        public static int GetCurrentGameDay(object? room) => room == null ? 0 : ReflectionHelper.GetFieldValue<int>(room, "_currentDay");
+        public static int GetCurrentGameDay(object? room) => room == null ? 0 : ReflectionHelper.GetFieldValue<int>(room, "_currentCycle");
 
-        public static int GetCurrentSessionCycle(object? room) => room == null ? 0 : ReflectionHelper.GetFieldValue<int>(room, "_currentSessionCount");
+        public static int GetCurrentSessionCycle(object? room) => room == null ? 0 : ReflectionHelper.GetFieldValue<int>(room, "_currentStage");
 
         public static long GetCurrentTick(object? room) => room == null ? 0L : ReflectionHelper.GetFieldValue<long>(room, "_currentTick");
 

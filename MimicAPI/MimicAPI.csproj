@@ -3,7 +3,7 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <Nullable>enable</Nullable>
         <WarningLevel>4</WarningLevel>
-        <NoWarn>$(NoWarn);MSB3277;MSB3270</NoWarn>
+        <NoWarn>$(NoWarn);MSB3277;MSB3270;MSB3245</NoWarn>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="0Harmony">
