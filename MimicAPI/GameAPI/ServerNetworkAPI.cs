@@ -118,7 +118,7 @@ namespace MimicAPI.GameAPI
                 return false;
             foreach (var player in dict.Values)
             {
-                if (ReflectionHelper.GetPropertyValue<long>(player, "UID") == playerUID)
+                if (ReflectionHelper.GetFieldValue<long>(player, "UID") == playerUID)
                     return true;
             }
             return false;

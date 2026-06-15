@@ -17,7 +17,7 @@ namespace MimicAPI.GameAPI
 
         public static object? GetVPlayerInRoom(object? room, int actorID)
         {
-            return GetAllVPlayersInRoom(room).FirstOrDefault(p => ReflectionHelper.GetFieldValue<int>(p, "ObjectID") == actorID);
+            return GetAllVPlayersInRoom(room).FirstOrDefault(p => ReflectionHelper.GetPropertyValue<int>(p, "ObjectID") == actorID);
         }
 
         public static List<object> GetAlivePlayersInRoom(object? room) => GetAllVPlayersInRoom(room).Where(p => IsAlive(p)).ToList();
@@ -35,7 +35,7 @@ namespace MimicAPI.GameAPI
 
         public static object? GetVActorInRoom(object? room, int actorID)
         {
-            return GetAllVActorsInRoom(room).FirstOrDefault(a => ReflectionHelper.GetFieldValue<int>(a, "ObjectID") == actorID);
+            return GetAllVActorsInRoom(room).FirstOrDefault(a => ReflectionHelper.GetPropertyValue<int>(a, "ObjectID") == actorID);
         }
 
         public static List<object> GetMonstersInRoom(object? room) => GetAllVActorsInRoom(room).Where(a => a?.GetType().Name == "VMonster").ToList();
