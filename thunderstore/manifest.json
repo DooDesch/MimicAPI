@@ -1,6 +1,6 @@
 {
     "name": "MimicAPI",
-    "version_number": "0.3.0",
+    "version_number": "0.0.0",
     "website_url": "https://github.com/NeoMimicry/MimicAPI",
     "description": "Shared reflection layer over private MIMESIS internals, so mods do not each re-derive the same field names.",
     "dependencies": [
