@@ -55,12 +55,42 @@ namespace MimicAPI.GameAPI
 
         public static int GetCurrentClientCount() => GetSessionCount();
 
-        public static int GetMaximumClients()
+        /// <summary>
+        /// Wie viele Spieler die Sitzung fuehrt - VRoomManager.GetPlayerCountInSession, also die
+        /// Laenge von GameSessionInfo.TotalPlayerSteamIDs.
+        /// </summary>
+        public static int GetPlayerCountInSession()
         {
             var vrm = CoreAPI.GetVRoomManager();
             if (vrm == null)
                 return 0;
             return ReflectionHelper.InvokeMethod(vrm, "GetPlayerCountInSession") is int n ? n : 0;
+        }
+
+        /// <summary>
+        /// Der ServerSocket des Steam-Transports. Er haengt nicht am VWorld, sondern als privates
+        /// Feld _server an der Transport-Komponente FishySteamworks - GetSdrServer und
+        /// GetRudpServer sind etwas anderes und liefern hier nichts.
+        /// </summary>
+        public static object? GetSteamServerSocket()
+        {
+            // Nicht generisch: FishySteamworks erbt von FishNet.Transporting.Transport, und diese
+            // Basisklasse liegt in einer Assembly, die MimicAPI bewusst nicht referenziert.
+            var transport = UnityEngine.Object.FindObjectOfType(typeof(FishySteamworks.FishySteamworks));
+            return transport == null ? null : ReflectionHelper.GetFieldValue(transport, "_server");
+        }
+
+        /// <summary>
+        /// Die Obergrenze des Servers, gelesen am ServerSocket. Bis 0.4.0 stand hier die Zahl der
+        /// Spieler in der Sitzung - ein Name, der etwas anderes sagte als er lieferte, und mit
+        /// FakePlayers faellt das nicht auf, weil beide Zahlen dann dicht beieinander liegen.
+        /// </summary>
+        public static int GetMaximumClients()
+        {
+            var socket = GetSteamServerSocket();
+            if (socket == null)
+                return 0;
+            return ReflectionHelper.InvokeMethod(socket, "GetMaximumClients") is int n ? n : 0;
         }
 
         public static void SetMaximumClients(object serverSocket, int value)

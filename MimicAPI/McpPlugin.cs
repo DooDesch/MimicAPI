@@ -92,7 +92,7 @@ namespace MimicAPI
         public static Func<Dictionary<string, object>> Describe = delegate ()
         {
             Dictionary<string, object> map = New();
-            map["get_session_state"] = Doc("Gastgeberrolle, Sitzungszahl, maximale Spielerzahl.", null);
+            map["get_session_state"] = Doc("Gastgeberrolle, Sitzungen, Spieler in der Sitzung, Obergrenze des Servers.", null);
             map["get_world_state"] = Doc("VWorld, Raumverwaltung und der Raum, in dem der lokale Spieler steht.", null);
             map["list_rooms"] = Doc("Alle Raeume mit Kennung, Typ, Mitgliederzahl und Zyklus.", null);
             map["get_room"] = Doc("Ein Raum im Detail.", "roomId (Zahl), sonst der aktuelle Raum");
@@ -107,6 +107,7 @@ namespace MimicAPI
             Dictionary<string, object> map = New();
             map["isHost"] = Try(delegate { return (object)(CoreAPI.GetVWorld() != null); }, map, "isHost");
             map["sessionCount"] = Try(delegate { return (object)(double)ServerNetworkAPI.GetSessionCount(); }, map, "sessionCount");
+            map["playersInSession"] = Try(delegate { return (object)(double)ServerNetworkAPI.GetPlayerCountInSession(); }, map, "playersInSession");
             map["maximumClients"] = Try(delegate { return (object)(double)ServerNetworkAPI.GetMaximumClients(); }, map, "maximumClients");
             map["serverRunning"] = Try(delegate { return (object)ServerNetworkAPI.IsServerRunning(); }, map, "serverRunning");
             return map;

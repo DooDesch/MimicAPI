@@ -35,6 +35,7 @@ jobs:
       - name: Build the project
         run: >
           dotnet build "MimicAPI/MimicAPI.csproj" --configuration Release
+          /p:Version="${{ steps.extract-version.outputs.version }}"
           /p:WorkspaceLibPath="${{ github.workspace }}/Workspace/lib"
           /p:GameManagedPath="${{ github.workspace }}/Workspace/lib/game"
           /p:GameAssemblyPath="${{ github.workspace }}/Workspace/lib/game"
@@ -78,6 +79,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   thunderstore:
     needs: build
+    # Only the upstream repository can publish this package. The namespace NeoMimicry belongs to
+    # the upstream owner, and a fork that tries it gets a red run and no package.
+    if: github.repository == 'NeoMimicry/MimicAPI'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -97,7 +101,7 @@ jobs:
           community: mimesis
           namespace: NeoMimicry
           name: MimicAPI
-          description: a API!
+          description: Shared reflection layer over private MIMESIS internals.
           version: ${{ needs.build.outputs.version }}
           repo: mimesis.thunderstore.io
           path: thunderstore-package
