@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-    <!-- Ein eigenes Directory.Build.targets beendet die Suche nach oben. Ohne diese Zeilen sieht
-         MimicAPI die Deploy-Vorgabe des uebergeordneten Arbeitsbereichs nicht und kopiert nach
-         PluginsPath, also in die echte Spielinstallation. Der Pfad wird zur Bauzeit gesucht und
-         enthaelt keine Maschinenangabe; fehlt die Datei, passiert nichts.
-         Der Umweg ueber eine Property ist noetig, weil eine Condition keine verschachtelten
-         Anfuehrungszeichen vertraegt (MSB4092). -->
-    <PropertyGroup>
-        <MimicParentBuildTargets>$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))</MimicParentBuildTargets>
-    </PropertyGroup>
-    <Import Project="$(MimicParentBuildTargets)" Condition="'$(MimicParentBuildTargets)' != '' And Exists('$(MimicParentBuildTargets)')" />
-
     <!-- Fail early with an actionable message if the game / MelonLoader paths are
          not configured. See Directory.Build.props for how to set GamePath. -->
     <Target Name="VerifyGamePaths" BeforeTargets="ResolveAssemblyReferences">
@@ -24,4 +13,17 @@
         <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(PluginsPath)\$(TargetFileName)" />
         <Message Text="Copied to Plugins: $(TargetFileName)" Importance="high" />
     </Target>
+
+    <!-- Ganz am Ende, und das ist der Punkt: ein eigenes Directory.Build.targets beendet die Suche
+         nach oben, also muss die Deploy-Vorgabe des Arbeitsbereichs von Hand hereingeholt werden.
+         Stuende der Import oben, waere das Prueftarget der Wurzel VOR CopyToPlugins deklariert -
+         beide haengen an AfterTargets="Build", und MSBuild fuehrt sie in Deklarationsreihenfolge
+         aus. Es wuerde dann gegen den Stand von vor der Kopie vergleichen und jeden Build als
+         "nicht angekommen" melden.
+         Der Umweg ueber eine Property ist noetig, weil eine Condition keine verschachtelten
+         Anfuehrungszeichen vertraegt (MSB4092). Fehlt die Datei, passiert nichts. -->
+    <PropertyGroup>
+        <MimicParentBuildTargets>$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)../'))</MimicParentBuildTargets>
+    </PropertyGroup>
+    <Import Project="$(MimicParentBuildTargets)" Condition="'$(MimicParentBuildTargets)' != '' And Exists('$(MimicParentBuildTargets)')" />
 </Project>
