@@ -1,9 +1,9 @@
-﻿{
+{
     "name": "MimicAPI",
     "version_number": "0.3.0",
     "website_url": "https://github.com/NeoMimicry/MimicAPI",
-    "description": "a api!.",
+    "description": "Shared reflection layer over private MIMESIS internals, so mods do not each re-derive the same field names.",
     "dependencies": [
-        "LavaGang-MelonLoader-0.7.1"
+        "LavaGang-MelonLoader-0.7.3"
     ]
 }
