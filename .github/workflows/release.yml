@@ -19,7 +19,9 @@ jobs:
       - name: Checkout Workspace repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository_owner }}/Mimesis-Workspace
+          # Named, not derived: the owner of this fork is DooDesch, but the Workspace repository
+          # lives in the organisation. A derived name points at a repository that does not exist.
+          repository: DooDesch-Mods/Mimesis-Workspace
           path: Workspace
           ssh-key: ${{ secrets.WORKSPACE_TOKEN }}
       - name: Extract version (remove v prefix)
