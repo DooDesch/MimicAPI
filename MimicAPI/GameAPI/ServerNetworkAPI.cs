@@ -76,7 +76,7 @@ namespace MimicAPI.GameAPI
         {
             // Nicht generisch: FishySteamworks erbt von FishNet.Transporting.Transport, und diese
             // Basisklasse liegt in einer Assembly, die MimicAPI bewusst nicht referenziert.
-            var transport = UnityEngine.Object.FindObjectOfType(typeof(FishySteamworks.FishySteamworks));
+            var transport = UnityEngine.Object.FindFirstObjectByType(typeof(FishySteamworks.FishySteamworks));
             return transport == null ? null : ReflectionHelper.GetFieldValue(transport, "_server");
         }
 
