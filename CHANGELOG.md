@@ -4,6 +4,11 @@ All changes to MimicAPI are in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/), and the project uses Semantic
 Versioning.
 
+## [0.4.1]
+
+### Fixed
+- The release carries the DLL of that build. `thunderstore/MimicAPI.dll` was in the repository, and the release job copied the folder over the fresh DLL, thus every release up to 0.4.0 shipped old code under a new version.
+
 ## [0.4.0]
 
 ### Added

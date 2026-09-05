@@ -419,3 +419,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# The release job copies the built DLL into the package. A DLL kept here would overwrite it, thus
+# the release would carry old code under a new version.
+thunderstore/*.dll
