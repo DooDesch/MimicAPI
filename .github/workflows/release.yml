@@ -45,7 +45,9 @@ jobs:
       - name: Prepare release directory
         run: |
           mkdir -p release
-          cp MimicAPI/bin/Release/netstandard2.1/MimicAPI.dll release/
+          # The metadata comes first and the built DLL last. In the other order a file named
+          # MimicAPI.dll inside thunderstore/ overwrites the DLL of this build, and the release
+          # then carries old code under a new version. That happened up to 0.4.0.
           if [ -d "thunderstore" ]; then
             cp -r thunderstore/* release/ 2>/dev/null || true
             # Update version in manifest.json if it exists
@@ -53,6 +55,8 @@ jobs:
               sed -i "s/\"version_number\": \".*\"/\"version_number\": \"${{ steps.extract-version.outputs.version }}\"/" release/manifest.json
             fi
           fi
+          cp MimicAPI/bin/Release/netstandard2.1/MimicAPI.dll release/
+          ls -la release/
       - name: Create release ZIP
         run: zip -j "MimicAPI_${{ steps.extract-version.outputs.version }}.zip" release/*
       - name: Upload Release ZIP
